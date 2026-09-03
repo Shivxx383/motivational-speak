@@ -3,9 +3,10 @@ import { createRoot } from 'react-dom/client';
 import { ArrowRight, CalendarDays, CheckCircle2, Mail, MapPin, Menu, Mic2, Phone, Quote, Sparkles, Star, X } from 'lucide-react';
 import './styles.css';
 
-const SITE_ID = import.meta.env.VITE_NSI_ANALYTICS_ID || 'NSI_LNAF4X28TN';
-const TRACKER_URL = import.meta.env.VITE_NSI_TRACKER_URL || 'http://localhost:4173/nsi-analytics.js';
-const INQUIRY_API_URL = import.meta.env.VITE_NSI_INQUIRY_API_URL || 'http://localhost:4000/api/inquiries/submit';
+const SITE_ID = import.meta.env.VITE_NSI_ANALYTICS_ID || 'NSI_1YU57HG68J';
+const INQUIRY_API_URL =
+  import.meta.env.VITE_NSI_INQUIRY_API_URL ||
+  'https://untamed-sappy-garment.ngrok-free.dev/api/inquiries/submit';
 
 const navItems = [
   { path: '/', label: 'Home' },
@@ -14,16 +15,6 @@ const navItems = [
   { path: '/events', label: 'Events' },
   { path: '/contact', label: 'Contact' },
 ];
-
-function loadTracker() {
-  if (!SITE_ID || !TRACKER_URL || document.querySelector('script[data-nsi-loaded="true"]')) return;
-  const script = document.createElement('script');
-  script.async = true;
-  script.src = TRACKER_URL;
-  script.dataset.siteId = SITE_ID;
-  script.dataset.nsiLoaded = 'true';
-  document.body.appendChild(script);
-}
 
 function currentPath() {
   return window.location.pathname || '/';
@@ -34,7 +25,6 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    loadTracker();
     const onPop = () => setPath(currentPath());
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
@@ -253,6 +243,7 @@ function Contact() {
 
     const payload = {
       siteId: SITE_ID,
+      environment: 'production',
       ...formMeta,
       pageUrl: window.location.href,
       pagePath: window.location.pathname,
@@ -307,7 +298,7 @@ function Contact() {
           <form
             className="contact-form"
             onSubmit={handleSubmit}
-            data-nsi-form="true"
+            data-nsi-form="false"
             data-nsi-form-id="speaker-contact-main"
             data-nsi-form-name="Motivational Speaker Contact Form"
             data-nsi-form-type="contact"
